@@ -9,14 +9,17 @@ const getData = async () => {
 const postData = async (todo) => {
     await fetch(url, {
         method:"POST",
-        body: JSON.stringify(todo), //alleen eigen data
+        body: JSON.stringify({
+            "description":todo.description,//alleen eigen data
+            "done": false   }), 
         headers: {
             "Content-Type": "application/json",
         }
     })
+
 }
 const putData = async (todo) => {
-    await fetch(`${url}/${todo.id}`, { //id
+    await fetch(`${url}/${todo._id}`, { //id
         method:"PUT",
         body: JSON.stringify({
             "description":todo.description,
@@ -28,7 +31,7 @@ const putData = async (todo) => {
 }
 
 const deleteData = async (todo) => {
-    await fetch(`url/${todo.id}`, {
+    await fetch(`${url}/${todo._id}`, {
         method: "DELETE"
     })
 }
