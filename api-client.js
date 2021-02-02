@@ -7,7 +7,7 @@ const getData = async () => {
 }
 
 const postData = async (todo) => {
-    await fetch(url, {
+    const answer = await fetch(url, {
         method:"POST",
         body: JSON.stringify({
             "description":todo.description,//alleen eigen data
@@ -16,6 +16,7 @@ const postData = async (todo) => {
             "Content-Type": "application/json",
         }
     })
+    return answer;
 
 }
 const putData = async (todo) => {
