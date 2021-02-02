@@ -34,15 +34,16 @@ const createLi = async (element,caller) => {
 
         const delButton = document.createElement("input");
         delButton.type = "button";
-        delButton.value = "delete";
+        delButton.value = "";
         delButton._id = element._id;
+        delButton.className = "fas";
         delButton.addEventListener("click", removeHandler);
                 
         li.append(vink);
         li.append(textinput);
         li.append(delButton);
         if (caller == "addfunction") {
-            let description = element.target.previousElementSibling.value;
+            let description = element.description;
             listItems.append(li);
             const returnData = await postData({"description":description, "done":false});
             const data = await returnData.json();
@@ -76,7 +77,13 @@ const updateHandler = async (e) => {
     if (e.target.type=="text"){
         putData({_id:e.target._id, description:e.target.value, done:e.target.previousElementSibling.checked},);
     }
-    else putData({_id:e.target._id, description:e.target.nextElementSibling.value, done:e.target.checked, });
+    else {
+        putData({_id:e.target._id, description:e.target.nextElementSibling.value, done:e.target.checked, });
+        if (e.target.checked==true){
+            e.target.nextElementSibling.className = "checked";
+        }
+        else {e.target.nextElementSibling.className = ""}
+    }
 }
 addButton.addEventListener("click",addHandler);
-refreshList()
+refreshList();
