@@ -1,10 +1,10 @@
 import {deleteData, getData, postData, putData} from "./api-client.js";
 const listItems = document.getElementsByClassName("list__items")[0];
-const addButton = document.getElementById("add");
+const addButton = document.getElementById("addTodos__btn");
+const todoText = document.getElementById("addTodos__text");
 
 let list = [];
 
-//postData({description: "Buy stuff", done:false});
 const refreshList = async () => {
     //clear the list
     let count = listItems.childNodes.length;
@@ -13,12 +13,17 @@ const refreshList = async () => {
     }
     list = await getData();
     console.log(list);
-    list.forEach(element => {
+    list.forEach(element => createLi(element,"refresh"));
+}   
+
+const createLi = async (element,caller) => {
+    
         const li = document.createElement("li");
         const textinput = document.createElement("input");
         textinput.type = "text";
         textinput.value = element.description;
         textinput._id = element._id;
+        li.id  = element._id;
         textinput.addEventListener("change", updateHandler);
 
         const vink = document.createElement("input");
@@ -31,43 +36,47 @@ const refreshList = async () => {
         delButton.type = "button";
         delButton.value = "delete";
         delButton._id = element._id;
-        delButton.addEventListener("click", removeHandler)
-        
-        listItems.appendChild(li);
-        
-        li.append(textinput);
+        delButton.addEventListener("click", removeHandler);
+                
         li.append(vink);
+        li.append(textinput);
         li.append(delButton);
-    });
-}   
+        if (caller == "addfunction") {
+            let description = element.target.previousElementSibling.value;
+            listItems.append(li);
+            const returnData = await postData({"description":description, "done":false});
+            const data = await returnData.json();
+            li.id = data._id;
+            vink._id = data._id;
+            delButton._id = data._id;
+            textinput._id = data._id;
+        }
+        else listItems.insertBefore(li,listItems.childNodes[0])
+}
 
-const addHandler = async (e) => {
-    // make a new object with inputvalue and "done"=false
-    // update UI = add list-item
-    // POST the new object to the database
-    await postData({"description":e.target.previousElementSibling.value, "done":false})
-    // refresh the browser
-    refreshList();
+const addHandler = async (element) => {
+    let description = element.target.previousElementSibling.value;
+    if (description=="") {
+        alert("Text was empty..");
+    }
+    else {
+        todoText.value = "";
+        element.description = description;
+        createLi(element,"addfunction");
+    }
 }
 
 const removeHandler = async (e) => {
-    // update UI = remove list item 
-    
-    // DELETE the object from database id=e.target.id
+    const li = document.getElementById(`${e.target._id}`);
+    listItems.removeChild(li);
     await deleteData({_id:e.target._id});
-    refreshList();
 }
 
 const updateHandler = async (e) => {
-    // get new state values
-    // update UI
-    // PUT the changed object in the database e.target.checked for checkbox /
     if (e.target.type=="text"){
-        //putData({_id:e.target._id ,description:e.target.value });
-        putData({_id:e.target._id, description:e.target.value, done:e.target.nextElementSibling.checked},);
+        putData({_id:e.target._id, description:e.target.value, done:e.target.previousElementSibling.checked},);
     }
-    else putData({_id:e.target._id, description:e.target.previousElementSibling.value, done:e.target.checked, });
-    
+    else putData({_id:e.target._id, description:e.target.nextElementSibling.value, done:e.target.checked, });
 }
 addButton.addEventListener("click",addHandler);
 refreshList()
