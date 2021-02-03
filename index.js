@@ -42,7 +42,7 @@ const createLi = async (element,caller) => {
         li.append(vink);
         li.append(textinput);
         li.append(delButton);
-        if (caller == "addfunction") {
+        if (caller == "addHandler") {
             let description = element.description;
             listItems.append(li);
             const returnData = await postData({"description":description, "done":false});
@@ -52,18 +52,22 @@ const createLi = async (element,caller) => {
             delButton._id = data._id;
             textinput._id = data._id;
         }
-        else listItems.insertBefore(li,listItems.childNodes[0])
+        else listItems.insertBefore(li,listItems.childNodes[0]);
+        if (vink.checked==true){
+            textinput.className = "checked";
+        }
+        else {textinput.className = ""}
 }
 
 const addHandler = async (element) => {
     let description = element.target.previousElementSibling.value;
     if (description=="") {
-        alert("Text was empty..");
+        alert("Please add some text first.");
     }
     else {
         todoText.value = "";
         element.description = description;
-        createLi(element,"addfunction");
+        createLi(element,"addHandler");
     }
 }
 

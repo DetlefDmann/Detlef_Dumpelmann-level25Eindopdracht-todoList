@@ -4,8 +4,8 @@ body {
 }
 
 .fas {
-  padding-left: 13px;
-  padding-right: 13px;
+  padding-left: 25px;
+  padding-right: 25px;
 }
 
 .checked {
@@ -15,7 +15,7 @@ body {
 .container {
   margin: auto;
   padding-right: 0;
-  width: 298px;
+  width: 314px;
   -webkit-box-align: right;
       -ms-flex-align: right;
           align-items: right;
@@ -31,7 +31,7 @@ body {
 }
 
 #addTodos__btn {
-  margin-right: 10px;
+  margin-right: 0;
 }
 
 .list__items {
