@@ -11,7 +11,7 @@ const getData = async () => {
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log(error);
+    console.log(`Could not load todo-list : ${error}`);
   }
 };
 
@@ -20,7 +20,7 @@ const postData = async (todo) => {
     const answer = await fetch(url, {
       method: "POST",
       body: JSON.stringify({
-        description: todo.description, //alleen eigen data
+        description: todo.description, //alleen eigen data, geen _id etc.
         done: false,
       }),
       headers: {
@@ -29,7 +29,7 @@ const postData = async (todo) => {
     });
     return answer;
   } catch (error) {
-    console.log(error);
+    console.log(`Could not post todo-item : ${error}`);
   }
 };
 const putData = async (todo) => {
@@ -46,7 +46,7 @@ const putData = async (todo) => {
       },
     });
   } catch (error) {
-    console.log(error);
+    console.log(`Changing the item did not work because of :${error}`);
   }
 };
 
