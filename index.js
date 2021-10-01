@@ -17,7 +17,7 @@ const refreshList = async () => {
     console.log(list);
     list.forEach((element) => createLi(element, "refresh"));
   } catch (error) {
-    console.log(`Foutmelding:${error}`);
+    console.log(`Foutmelding tijdens refresh:${error}`);
   }
 };
 
@@ -49,15 +49,22 @@ const createLi = async (element, caller) => {
   if (caller == "addHandler") {
     let description = element.description;
     listItems.append(li);
-    const returnData = await postData({
-      description: description,
-      done: false,
-    });
-    const data = await returnData.json();
-    li.id = data._id;
-    vink._id = data._id;
-    delButton._id = data._id;
-    textinput._id = data._id;
+    try {
+      const returnData = await postData({
+        description: description,
+        done: false,
+      });
+      const data = await returnData.json();
+      li.id = data._id;
+      vink._id = data._id;
+      delButton._id = data._id;
+      textinput._id = data._id;
+    } catch (error) {
+      console.log(
+        `Could not add this Todo item, server did not return correct data : ${error}.`
+      );
+      alert("Item not added, server did not return correct data.");
+    }
   } else listItems.insertBefore(li, listItems.childNodes[0]);
   if (vink.checked == true) {
     textinput.className = "checked";
